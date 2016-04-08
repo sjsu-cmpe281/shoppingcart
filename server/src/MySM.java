@@ -5,18 +5,13 @@ import java.io.*;
 /**
  *  Description of the Class
  *
- *@author     Paul Nguyen
- *@created    March 18, 2003
+ *@author     RAKESH DATTA
+ *@created    April 5, 2016
  */
 public class MySM implements SM {
 
 	private SM sm;
 
-/*
-        public SM.OID getOID( byte[] oidbytes ) {
-	  return null ;
-        }
-*/
 
 	/**
 	 *  Constructor for the MySM object
