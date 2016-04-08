@@ -1,0 +1,163 @@
+
+import java.util.*;
+import java.io.*;
+import java.net.*;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.InetSocketAddress;
+import java.io.InputStream;
+import java.util.Scanner;
+
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
+import com.sun.net.httpserver.HttpServer;
+
+
+public class SMHttpServer {
+
+    public static void getKeyFromJson(String keyValue) throws Exception {
+
+
+    }
+    public static void createRecord(MySM sm, MySM.MyHashMap hm, String keyValue) throws Exception {
+            Record found   = null;
+            SM.OID rec_oid = null;
+            SM.OID found_oid = null;
+            Record rec     = new Record(20);
+
+            String jsonStr = "{" + keyValue + "}";
+	    JSONObject jsonObj = (JSONObject)new JSONParser().parse(jsonStr);
+
+            Set keys = jsonObj.keySet();
+            Iterator a = keys.iterator();
+    	    while(a.hasNext()) {
+    	       String key = (String)a.next();
+       	       String value = (String)jsonObj.get(key);
+               System.out.println("key : "+key);
+               System.out.println("value :"+value);
+               
+               /* Store this value in SM */
+	       rec.setBytes(value.getBytes());
+               rec_oid        = (SM.OID) sm.store(rec);
+               found          = (Record) sm.fetch(rec_oid);
+               System.out.print("[INFO]: Fetch Got Rec: ");
+               System.out.write(found.getBytes(0,0));
+
+               /* Store the  (GUID,Key) pair in Index */
+               hm.create (rec_oid, key);
+             /*  found_oid      = hm.read(key);
+               found          = (Record) sm.fetch(found_oid);
+               System.out.print("[INFO]: Fetch Got Rec: ");
+               System.out.write(found.getBytes(0,0));
+              */ 
+
+            for (Map.Entry<String,String> entry : hm.entrySet()) {
+  String key = entry.getKey();
+  String value = entry.getValue();
+  System.out.println("key ="+key+" Value="+value);
+  // do stuff
+}
+
+            }
+
+    }
+
+
+    public static String readRecord(MySM sm, MySM.MyHashMap hm, String key) throws Exception {
+
+            Record rec      = null;
+            SM.OID rec_oid  = null;
+
+            System.out.println("Key ="+key);
+            rec_oid         = hm.read(key);
+            //rec_oid         = new SM.OID(guid);
+            rec             = (Record) sm.fetch(rec_oid);
+            System.out.println("[INFO] : readRecord:  Rec = ") ;
+            System.out.write(rec.getBytes(0,0));
+            String response = "200 OK sreceived\n";
+            return (response);
+    }
+
+
+    public static void main(String[] args) throws Exception {
+
+            HttpServer server = null;
+            server = HttpServer.create(new InetSocketAddress(8080), 0);
+
+
+            HttpHandler handler = new HttpHandler() {
+                    @Override
+		    public void handle(HttpExchange msg) throws IOException {
+	    		MySM sm = new MySM();   
+            		MySM.MyHashMap map = sm.new MyHashMap();
+
+			String body = " ";
+
+                        System.out.println("[INFO]: Storage Manager Initialised");
+
+			System.out.println("[INFO]: URI: "+ msg.getRequestURI());
+                        System.out.println("[INFO]: METHOD: "+ msg.getRequestMethod());
+
+ 			//			    System.out.println("Trying\n");	
+                        InputStream in = msg.getRequestBody();
+                        if (0 != in.available()) {
+				body = new Scanner(in,"UTF-8").useDelimiter("\\A").next();
+                        	System.out.println("[INFO]: BODY: "+ body);
+		        } else {
+                        	System.out.println("[WARNING]: Empty message body");
+                        }
+
+                        String response = " ";
+
+                        switch(msg.getRequestMethod()){
+                                case "POST":    System.out.println("[INFO]: POST request received");
+						try{
+                                                  createRecord(sm, map, body);
+                                                  response = "200 OK received\n";
+						} catch (Exception e) {
+                                                  System.out.println("[ERROR]: POST request cant be handled");
+                                                  response = "ERROR\n";
+						}
+                                                break;
+
+                                case "GET":     System.out.println("[INFO]: GET request received");
+						try{
+                                                  response = readRecord(sm, map, body);
+						} catch (Exception e) {
+                                                  System.out.println("[ERROR]: GET request cant be handled");
+                                                  response = "ERROR\n";
+						}
+						break;
+
+                                case "PUT":     System.out.println("[INFO]: PUT request received");
+                                                response = "200 OK received\n";
+                                                break;
+
+                                case "DELETE":  System.out.println("[INFO]: DELETE request received");
+                                                response = "200 OK received\n";
+                                                break;
+
+                                default:        System.out.println("[ERROR]: Method Not Supported");
+                                                response = "Method Not Supported\n";
+
+                        }
+                        msg.sendResponseHeaders(200, response.length());
+                        OutputStream os = msg.getResponseBody();
+                        os.write(response.getBytes());
+                        os.close();
+                   }
+                };
+
+		server.createContext("/", handler);
+		server.setExecutor(null); // creates a default executor
+		server.start();
+		System.out.println("[INFO]: HTTP Server started at port 8080");
+		System.out.println("========================================");
+
+  	}
+
+}

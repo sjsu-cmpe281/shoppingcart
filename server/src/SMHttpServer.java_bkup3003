@@ -1,0 +1,296 @@
+
+import java.util.*;
+import java.io.*;
+import java.net.*;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.InetSocketAddress;
+import java.io.InputStream;
+import java.util.Scanner;
+
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
+import com.sun.net.httpserver.HttpServer;
+import com.sun.net.httpserver.Headers;
+
+public class SMHttpServer {
+    private static MySM sm = new MySM();
+    private static MySM.MyHashMap map = sm.new MyHashMap();
+
+    private static String myRole;  
+    private static String slave1IP ;  
+    private static String slave2IP ; 
+    private static String masterIP;  
+
+    public static String getKeyFromJson(String keyValue) throws Exception {
+           String jsonStr = "{" + keyValue + "}";
+           JSONObject jsonObj = (JSONObject)new JSONParser().parse(jsonStr);
+
+           Set keys = jsonObj.keySet();
+           Iterator a = keys.iterator();
+           while(a.hasNext()) {
+               String key = (String)a.next();
+               String value = (String)jsonObj.get(key);
+               System.out.println("[INFO]: key   = "+key);
+               System.out.println("[INFO]: value = "+value);
+               return key;
+           }
+           return null;
+    }
+
+
+    public static SM.OID createRecord(MySM sm, String keyValue) throws Exception {
+            Record found   = null;
+            SM.OID rec_oid = null;
+            SM.OID found_oid = null;
+            Record rec     = new Record(20);
+
+	    rec.setBytes(keyValue.getBytes());
+            rec_oid        = (SM.OID) sm.store(rec);
+            return rec_oid;
+    }
+
+    public static void replication(String myRole, String body, String srcIP, String destIP) throws Exception {
+            String cmd = "";
+/*
+	    if (myRole.equalsIgnoreCase("MASTER")) {
+                cmd = "curl -X POST -d "+body+" localhost:8081 -H 'X-FORWARDED-FOR: 127.0.0.1'";
+		Runtime.getRuntime().exec(cmd);
+                cmd = "curl -X POST -d "+body+" localhost:8082 -H 'X-FORWARDED-FOR: 127.0.0.1'";
+                Runtime.getRuntime().exec(cmd);
+            } else if (myRole.equalsIgnoreCase("SLAVE")) {
+               	cmd = "curl -X POST -d "+body+" localhost:8080 -H 'X-FORWARDED-FOR: 127.0.0.3'";
+               	Runtime.getRuntime().exec(cmd);
+            }
+*/
+           cmd = "ping -c "+destIP;
+           Process p = Runtime.getRuntime().exec(cmd);
+	   int returnVal = p.waitFor();
+           boolean reachable = (returnVal==0);
+
+           if (reachable) {
+           	cmd = "curl -X POST -d "+body+" localhost:8080 -H 'X-FORWARDED-FOR: "+srcIP+"'";
+           	//cmd = "curl -X POST -d "+body+" "+destIP+":8080 -H 'X-FORWARDED-FOR: "+srcIP+"'";
+           	Runtime.getRuntime().exec(cmd);
+                return 1;
+           } else {		
+                return 0;
+           }
+    }
+
+
+
+    public static void main(String[] args) throws Exception {
+
+            HttpServer server = null;
+	    int port = 8080;
+            server = HttpServer.create(new InetSocketAddress(port), 0);
+
+            /***** Load Configuration Properties *******************/
+            Properties prop   = new Properties();
+            InputStream input = null;
+            input             = new FileInputStream("config.properties");
+
+            // load a properties file
+            prop.load(input);
+ 
+            String partitionMode = prop.getProperty("partitionMode");
+            String myRole        = prop.getProperty("myRole");
+	    String masterIP      = prop.getProperty("masterIP");
+            String slave1IP      = prop.getProperty("slave1IP");
+            String slave2IP      = prop.getProperty("slave2IP");
+
+	    // get the property value and print it out
+
+	    System.out.println("partitionMode = "+partitionMode+",");
+	    System.out.println("myRole        = "+myRole+",");
+	    System.out.println("masterIP      = "+masterIP+",");
+	    System.out.println("slave1IP      = "+slave1IP+",");
+	    System.out.println("slave2IP      = "+slave2IP+",");
+
+	    /********************************************************/
+
+            HttpHandler handler = new HttpHandler() {
+                    @Override
+		    public void handle(HttpExchange msg) throws IOException {
+                        
+			String body = " ";
+ 			String cmd  = " ";
+
+                        System.out.println("[INFO]: Storage Manager Initialised");
+
+			System.out.println("[INFO]: URI: "+ msg.getRequestURI());
+                        System.out.println("[INFO]: METHOD: "+ msg.getRequestMethod());
+
+                        InputStream in = msg.getRequestBody();
+                        if (0 != in.available()) {
+				body = new Scanner(in,"UTF-8").useDelimiter("\\A").next();
+                        	System.out.println("[INFO]: BODY: "+ body);
+		        } else {
+                        	System.out.println("[WARNING]: Empty message body");
+                        }
+     
+                        Headers h = msg.getRequestHeaders();
+                        String srcip = h.getFirst("X-FORWARDED-FOR");
+            		if (srcip == null) {
+                		srcip = msg.getRemoteAddress().toString();
+            		}
+
+
+                    	System.out.println("[WARNING]: masterIP:"+masterIP+" srcip:"+srcip);
+                        String response = " ";
+
+                        switch(msg.getRequestMethod()){
+                                case "POST":    System.out.println("[INFO]: POST request received");
+						try{
+					          
+				                  if (myRole.contains("MASTER")) {
+                                                  	SM.OID oid = createRecord(sm, body);
+     						  	String key = getKeyFromJson(body);
+ 						  	map.create (oid, key);
+						  	SM.OID found_oid  = map.read(key);
+                                                  	response = "SUCCESS\n";
+               					  	//Record found      = (Record) sm.fetch(found_oid);
+						  	//System.out.print("[TEST]: Fetch Record ");
+               					  	//System.out.write(found.getBytes(0,0));
+					          	//System.out.println("");
+						  
+							if(!replication (myRole, body, masterIP, slave1IP)) {
+								System.out.println("[ERROR]: Slave "+slave1IP+" is partitioned...POST not forwarded to Slave.");
+							} else {
+								System.out.println("[INFO]: Slave "+slave1IP+" is Alive...POST forwarded.");
+                                                        }
+
+							if(!replication (myRole, body, masterIP, slave2IP)){
+								System.out.println("[ERROR]: Slave "+slave2IP+" is partitioned.POST not forwarded to Slave");
+							} else {
+								System.out.println("[INFO]: Slave "+slave2IP+" is Alive...POST forwarded.");
+							}
+
+						  } else if (myRole.contains("SLAVE")) {
+						  	switch (partitionMode) {
+						    	case "NOPARTITION":
+ 								if (srcip.contains(masterIP)) {
+								   System.out.println("[INFO]: Slave Received POST from Master.. ");
+                                                  		   SM.OID oid = createRecord(sm, body);
+     						  		   String key = getKeyFromJson(body);
+ 						  		   map.create (oid, key);
+						  		   SM.OID found_oid  = map.read(key);
+
+								} else {
+								   System.out.println("[INFO]: Slave Received POST from external n/w.. ");
+								   System.out.println("[INFO]: Slave in Nopartition mode.. ");
+								   System.out.println("[INFO]: Forwaring POST to Master.. ");
+								   if(!replication (myRole, body, myIP, masterIP)) {
+                                                                	System.out.println("[ERROR]: Master is not reachable...POST not forwarded");
+                                                        } else {
+                                                                System.out.println("[INFO]: Slave "+slave2IP+" is Alive...POST forwarded.");
+                                                        }
+                                                                }
+                                                                response = "SUCCESS\n";
+								break;
+
+						    	case "CP":	
+								System.out.println("[ERROR]: Slave in CP mode..");
+								System.out.println("[ERROR]: Write Record Rejected..");
+								response = "ERROR\n";
+								break;
+						    	case "AP": 
+								System.out.println("[ERROR]: Slave in AP mode..");
+								System.out.println("[ERROR]: Write Record Rejected..");
+								response = "ERROR\n";
+								break;
+					            	default:
+								System.out.println("[ERROR]: Undefined Partition Type..");
+								response = "ERROR\n";
+								break;
+
+                                                        }
+                                                 } else {
+                                                  System.out.println("[ERROR]: Undefine Role.. POST request cant be handled");
+                                                 }	
+						} catch (Exception e) {
+                                                  System.out.println("[ERROR]: POST request cant be handled");
+                                                  response = "ERROR\n";
+						}
+                                                break;
+
+                                case "GET":     System.out.println("[INFO]: GET request received");
+						try{
+						  if (myRole.contains("SLAVE") &&
+						      partitionMode.contains("CP")) {
+                                                      System.out.println("[ERROR]: Slave is in CP mode..");
+                                                      System.out.println("[ERROR]: GET request wont be handled..");
+					              response = "ERROR\n";		
+                                                  } else {
+						      SM.OID oid   = map.read(body);
+						      Record rec   = (Record) sm.fetch(oid);
+						      System.out.print("[INFO]: GetRecord:  Record = ") ;
+            					      System.out.write(rec.getBytes(0,0));
+					              System.out.println("");
+            					      response = new String (rec.getBytes(0,0));
+            					      response = response + "\n";
+						  }
+						} catch (Exception e) {
+                                                  System.out.println("[ERROR]: GET request cant be handled");
+                                                  response = "ERROR\n";
+						}
+						break;
+
+                                case "PUT":     System.out.println("[INFO]: PUT request received");
+				                try{
+     						  String key   = getKeyFromJson(body);
+                                                  SM.OID oid   = map.read(key);
+						  Record rec   = new Record(20);
+            					  rec.setBytes(body.getBytes());
+                                                  SM.OID new_oid = (SM.OID) sm.update(oid, rec);
+                                                  Record found   = (Record) sm.fetch(new_oid);
+                                                  System.out.print("[INFO]: UpdRecord:  New Record = ") ;
+                                                  System.out.write(found.getBytes(0,0));
+                                                  System.out.println("");
+                                                  response = "SUCCESS\n";
+                                                } catch (Exception e) {
+                                                  System.out.println("[ERROR]: PUT request cant be handled");
+                                                  response = "ERROR\n";
+                                                }
+
+                                                break;
+
+                                case "DELETE":  System.out.println("[INFO]: DELETE request received");
+					        try{
+                                                  SM.OID oid   = map.read(body);
+                                                  sm.delete(oid);
+      					          map.delete(body);
+                                                  System.out.println("[INFO]: Record Deleted\n");
+                                                  response = "SUCCESS\n";
+                                                } catch (Exception e) {
+                                                  System.out.println("[ERROR]: DELETE request cant be handled");
+                                                  response = "ERROR\n";
+                                                }
+
+                                                break;
+
+                                default:        System.out.println("[ERROR]: Method Not Supported");
+                                                response = "Method Not Supported\n";
+
+                        }
+                        msg.sendResponseHeaders(200, response.length());
+                        OutputStream os = msg.getResponseBody();
+                        os.write(response.getBytes());
+                        os.close();
+                   }
+                };
+
+		server.createContext("/", handler);
+		server.setExecutor(null); // creates a default executor
+		server.start();
+		System.out.println("[INFO]: HTTP Server started at port %d"+port);
+		System.out.println("========================================");
+
+  	}
+
+}
