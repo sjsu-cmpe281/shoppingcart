@@ -3,5 +3,13 @@
 # DATE  : April 9, 2016
 ###################################################################
 
-1. Riak Study for Shopping Cart
-2. Created a Basic Java client for Riak
+Riak Study for Shopping Cart
+->Read Riak docs and installation for MacOSX
+->Installed Riak
+->Changed ulimit to 65536 which the minimum recommended for Open File limits
+
+
+Created a Basic Java client for Riak
+->Create RiakClient.java which communicates with Riak Database
+->Added required dependencies from Maven
+->Successfully Built version commited to github
