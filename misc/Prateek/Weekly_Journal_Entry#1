@@ -3,4 +3,70 @@
 # DATE  : April 9, 2016
 ###################################################################
 
-Addeed some stuff
+GIT Repo: https://github.com/sjsu-cmpe281/shoppingcart
+Waffle.io Link: https://waffle.io/sjsu-cmpe281/shoppingcart
+
+I am working with Team #1 for project development of a "shoppingcart" system. I chose to work for the front end development using
+Heroku.
+The first step was to install heroku and the associated npm module along with the standard node-js compiler for windows.
+Second was to configure npm , nodejs and heroku environment variables to that common commands such as "heroku create" and "node node.js"
+could be easily executed from command line.
+For the purpose of demonstration, I created a simple httpserver listening on port 8080 and when the url is accessed, a simple "Hello World"
+message is displayed. 
+Souce code for the server is given below:
+
+"const http = require('http');
+
+http.createServer( (request, response) => {
+  response.writeHead(200, {'Content-Type': 'text/plain'});
+  response.end('Hello World\n');
+}).listen(8080);
+
+console.log('Server running at http://127.0.0.1:8080/');
+"
+
+After configuring heroku enviroment, I went through the heroku tutorial on https://devcenter.heroku.com/articles/getting-started-with-nodejs#introduction
+and followed the steps to login to heroku server using my credentials.
+
+cmd: heroku login
+
+Heroku has a sample application  on repository which I then cloned using the following commands
+cmd: git clone https://github.com/heroku/node-js-getting-started.git
+
+The repo that was cloned contains the sample application as well as package.json which contains all the dependencies. These 
+dependencies are resolved by doing a npm command to install the node modules that are required for the project.
+
+cmd: npm install
+
+Next step was to create an app on heroku which takes in all the source code from the repo and then deploy the app.
+
+create command: heroku create
+
+deploy command: git push heroku master
+
+The deployment phase takes care of installing all the binaries and the dependencies.
+Next step was to make sure that atleast one instance of the app is running by setting the ps:scale web value to 1
+cmd: heroku ps:scale web = 1
+
+Finally, we can open the app which is hosted at the following url
+https://enigmatic-coast-33002.herokuapp.com/
+
+Another intersting thing that I learned was the ProcFile defination. Procfile serves as an entry point which, for this app was 
+the index.js file. 
+
+Once the dependencies are resolved, we can deploy the app locally using 
+cmd: heroku local web
+
+Screenshot of local web server running on port 5000:
+http://imgur.com/jYikZdz
+
+Next step was to add some dependendies to the index.js , test locally, then push the changes.
+
+cmd to add files to local git: git add .
+cmd to commit changes:git commit -m "Demo"
+cmd to deploy:git push heroku master
+cmd to test: heroku open var
+
+Objective for this week: add httpsockets and a database to heroku and add paths such as server/product/mens; server/product/womem
+to create a web server shopping. Once that is accomplished, need to realizie a persistent shopping cart using node js and then deploy 
+onto heroku
