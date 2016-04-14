@@ -1,0 +1,25 @@
+###################################################################
+# AUTHOR: Sarat Vemulapalli
+# DATE  : April 9, 2016
+###################################################################
+
+Riak Study for Shopping Cart
+->Read Riak docs and installation for MacOSX
+->Installed Riak
+->Changed ulimit to 65536 which the minimum recommended for Open File limits
+
+-->Riak over traditional RDBMS
+
+Scalability benefits of Riak, including an examination of limitations around master/slave architectures and sharding, and what Riak does differently
+A look at the operational aspects of Riak and where they differ from relational approaches
+Riak’s data model and benefits for developers, as well as the tradeoffs and limitations of a key/value approach
+Migration considerations, including where to start when migrating existing applications to Riak
+Riak’s eventually consistent design, how it differs from a strongly consistent design, and things you need to know about handling data conflicts in Riak
+Multi-site replication options in Riak
+
+#
+
+Created a Basic Java client for Riak
+->Create RiakClient.java which communicates with Riak Database
+->Added required dependencies from Maven
+->Successfully Built version commited to github
