@@ -1,0 +1,24 @@
+node-rest-client
+
+Installation
+$ npm install node-rest-client
+
+https://www.npmjs.com/package/node-rest-client
+Above link shows usages for simple HTTP GET,POST,PUT,DELETE
+
+
+https://nodejs.org/en/docs/guides/anatomy-of-an-http-transaction/
+Its clearly shown here how nodejs handle HTTP requests.
+
+
+
+
+
+
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+Test Node:
+To see if Node is installed, open the Windows Command Prompt, Powershell or a similar command line tool, and type node -v. This should print a version number, so you’ll see something like this v0.10.35.
+Test NPM:
+To see if NPM is installed, type npm -v in Terminal. This should print NPM’s version number so you’ll see something like this 1.4.28
