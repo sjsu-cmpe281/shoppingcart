@@ -1,0 +1,33 @@
+--> Create folder for your app(node-test)
+-->The package manager
+node package manager or npm for short. npm allows you to define all of your 3rd party libraries in one file. In our node-test folder, lets create a file called package.json
+
+{
+  "name": "node-test",
+  "version": "0.0.1",
+  "description": "a simple node.js project",
+  "private": true,
+  "dependencies": {
+    "express": "3.x"
+  }
+}
+
+dependencies attribute: This is where we define all of our third party packages.
+Express.js is a “web application framework for node”. A simple analogy might be that node is like plain JavaScript and express is like jQuery.
+
+cd into your node-test directory and run npm install
+
+In our node-test directory create an new file named app.js. For this project all of our node specific code is going to live in this one file.
+
+In our node-test directory create a new directory named views. Inside of views create an index.hbs file, which will hold the HTML for our sites new home page.
+
+In order for our app to handle templating, we need to do a couple of things. First in app.js right above where we define our middleware add these two lines:
+//setup our app to use handlebars.js for templating
+app.set('view engine', 'hbs');
+app.set('views', path.join(__dirname, 'views'));
+
+
+------------------------------------------------------------------------------------------------------------------------------------------
+https://speckyboy.com/2013/11/13/node-js-for-front-end-developers/
+
+To add a database: Well node works really well with MongoDB, which is great for front-end developers because it uses json to store data. mongoose.js is highly recommended which makes working with MongoDB even easier.
