@@ -1,0 +1,28 @@
+###################################################################
+# AUTHOR: Sarat Vemulapalli
+# DATE  : April 16, 2016
+###################################################################
+
+Github Team REPO: 
+https://github.com/sjsu-cmpe281/shoppingcart
+UserID: saratvemulapalli
+
+Waffle : 
+https://waffle.io/sjsu-cmpe281/shoppingcart
+
+1. Worked on simple java riak client which can make basic create, read, update and delete operations. 
+
+2. After discussing with the team, we have decided to use nodejs for both frontend and backend.
+Hence we decided to discard existing java client and start working on nodejs for riak shopping cart store. 
+Spent time on researching how exisiting node js client works with riak. 
+Used basho github repository's node js client and use it to make CRUD operations.
+
+3. Did a study on how riak supports built in rest API's and how riak's REST API's can be leveraged instead of building our own web services.
+4. Completed an architecture plan of how shopping cart data would be stored in Riak and what services need to be exposed for the front end team to access the API's.
+Decided on the structure of JSON object passed between frontend heroku and backend Riak.
+{
+"user_id": //to identify each user
+"item_ids": //to identify each item added into the cart
+"quantity": //to check if requested quantity is available from mongodb product catalog
+"state": //state of cart: pending, checked out, shipping in progress etc
+}
