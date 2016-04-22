@@ -28,10 +28,23 @@
   <div class="container-full">
   <div class="jumbotron">
   <h2 class="margin-based-vertical">
-  Women  
-  </h2>
+  Women
+    </h2>
     </div>
   </div>
+  
+  <div >
+This all is from database.
+<% for(var i in data.r) { %>
+<div class="panel panel-default">
+<p><%= data.r[i].id %><p>
+<p><%= data.r[i].modelNumber %><p>
+<% }%>
+</div>
+</div>
+
+
+
   <div class="container">
   <div class="row">
     <div class="col-sm-6" style="background-color:yellow;">

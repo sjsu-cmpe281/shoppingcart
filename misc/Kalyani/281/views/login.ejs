@@ -11,9 +11,16 @@
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
 </head>
 <body>
-<div class="jumbotron">
+<div >
 This all is from database.
-<%= data[0].username %>
+<% for(var i in data.r) { %>
+<div class="panel panel-default">
+<p><%= data.r[i].username %><p>
+</div>
+</div>
+<div class="panel panel-default">
+<p><%= data.r[i].email %><p>
+<% }%>
 </div>
 <div class="form">
       
@@ -94,5 +101,7 @@ This all is from database.
       </div><!-- tab-content -->
       
 </div> <!-- /form -->
+</div>
+
 </body>
 </html>

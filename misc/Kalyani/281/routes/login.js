@@ -6,7 +6,7 @@
 var ejs= require("ejs");
 var mongo = require("./mongoConnect");
 var mongoURL = "mongodb://localhost:27017/db_login";
-
+var json_re={user:"kalyani"};
 exports.login = function(req, res){
 	
 	
@@ -14,27 +14,33 @@ exports.login = function(req, res){
 		console.log('Connected to mongo at: ' + mongoURL);
 		var coll = mongo.collection('usercollection');
 
-		coll.find({username: "testuser1"}).toArray(function(err, user){
+		coll.find().toArray(function(err, user){
 			if (user) {
 				// This way subsequent requests will know the user is logged in.
 				//req.session.username = user.email;
 				//console.log(req.session.username +" is the session");
 				json_responses = {"statusCode" : 200};
-				var jsonString=JSON.stringify(user);
-				var json_parsed=JSON.parse(jsonString);
-				//ar json_responses.user=user;
-				console.log("connected to db  "+user[0].username);
+				
+				var jsonString = JSON.stringify(user);
+				var jsonParse = JSON.parse(jsonString);
+				//json_responses.tweets = jsonParse;
+				console.log(jsonParse);
+				json_re.r=jsonParse;
+				
+				
+			
+				console.log("connected to db  ");
 				/*
-				ejs.renderFile('./views/login.ejs', {data: user},function(err, result){
+				ejs.renderFile('./views/login.ejs', {data: json_re},function(err, result){
 					if(!err){
 						res.end(result);
 					}
 					else{
 						res.end("error occured");
-						consol.log(err);
+						console.log(err);
 					}
 				}); */
-				res.render('login', {data: user});
+				res.render('login', {data: json_re});
 				//res.send(json_responses);
 
 			} else {
