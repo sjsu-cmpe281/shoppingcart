@@ -5,14 +5,14 @@
  */
 var ejs= require("ejs");
 var mongo = require("./mongoConnect");
-var mongoURL = "mongodb://localhost:27017/db_login";
+var mongoURL = "mongodb://localhost:27017/db_bag";
 var json_re={user:"kalyani"};
-exports.login = function(req, res){
+exports.womendata = function(req, res){
 	
 	
 	mongo.connect(mongoURL, function(){
 		console.log('Connected to mongo at: ' + mongoURL);
-		var coll = mongo.collection('usercollection');
+		var coll = mongo.collection('bags');
 
 		coll.find().toArray(function(err, user){
 			if (user) {
@@ -27,7 +27,7 @@ exports.login = function(req, res){
 				console.log(jsonParse);
 				json_re.r=jsonParse;
 				
-				
+	
 			
 				console.log("connected to db  ");
 				/*
@@ -36,11 +36,11 @@ exports.login = function(req, res){
 						res.end(result);
 					}
 					else{
-						res.end("error occured");
+						res.end("error occurred");
 						console.log(err);
 					}
 				}); */
-				res.render('login', {data: json_re});
+				res.render('womendata', {data1: json_re});
 				//res.send(json_responses);
 
 			} else {

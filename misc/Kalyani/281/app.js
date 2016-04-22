@@ -9,7 +9,9 @@ var express = require('express')
   , http = require('http')
   , path = require('path')
   , women = require('./routes/women')
-  , login = require('./routes/login');
+  , womendata = require('./routes/womendata')
+  , logindata = require('./routes/logindata')
+  , signup = require('./routes/signup');
 
 var app = express();
 
@@ -32,7 +34,9 @@ if ('development' == app.get('env')) {
 app.get('/', routes.index);
 app.get('/users', user.list);
 app.get('/women',women.women);
-app.get('/login',login.login);
+app.get('/womendata',womendata.womendata);
+app.get('/logindata',logindata.logindata);
+app.get('/signup',signup.signup);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));

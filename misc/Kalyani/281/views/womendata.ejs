@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
   <head>
-  <!--  <title><%= title %></title> -->
   <title>Guess Bags</title>
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
@@ -33,29 +32,33 @@
     </div>
   </div>
   
-  <div >
-This all is from database.
-<% for(var i in data.r) { %>
-<div class="panel panel-default">
-<p><%= data.r[i].id %><p>
-<p><%= data.r[i].countGumballs %><p>
-<p><%= data.r[i].modelNumber %><p>
-<p><%= data.r[i].serialNumber %><p>
-<% }%>
-</div>
-</div>
-
-
-
   <div class="container">
   <div class="row">
     <div class="col-sm-6" style="background-color:yellow;">
-      <p>..</p>
+      <p>First</p>
     </div>
     <div class="col-sm-6" style="background-color:yellow;">
-      <p>...</p>
+      <p>Second</p>
     </div>
   </div>
+</div>
+<div >
+  <div class="container-full">
+  <div class="jumbotron">
+This all is from database.
+<% for(var i in data1.r) { %>
+<div class="panel panel-default">
+<p>item_code : <%= data1.r[i].item_code %><p>
+<p>type : <%= data1.r[i].type %><p>
+<p>gender : <%= data1.r[i].gender %><p>
+<p>color : <%= data1.r[i].color %><p>
+<p>style : <%= data1.r[i].style %><p>
+<p>price : <%= data1.r[i].price %><p>
+<p>avail_count : <%= data1.r[i].avail_count %><p>
+</div>
+<% }%>
+</div>
+</div>
 </div>
 
  <div class="container">
@@ -71,6 +74,5 @@ This all is from database.
     </div>
      </div>
   </div>
-
   </body>
 </html>
