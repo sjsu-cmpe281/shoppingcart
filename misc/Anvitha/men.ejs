@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+     <% include ./head %>
+    
+
+    
+  </head>
+  <body>
+  <header>
+        <% include ./header %>
+        
+    </header>
+<!-- Loading the AngularJS file from /public/angularJS folder -->
+<script src="angularjs/men.js"></script>
+</head>
+<body ng-app="login" ng-controller="login">
+	<div class="row">
+		<div class="col-md-4">
+			<div class="row">
+				
+	<input type="submit" class="btn btn-success" ng-click="submit();"
+						value="Search" />
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
