@@ -37,6 +37,7 @@ app.get('/women',women.women);
 app.get('/womendata',womendata.womendata);
 app.get('/logindata',logindata.logindata);
 app.get('/signup',signup.signup);
+app.post('/saveDetails',signup.saveDetails);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
