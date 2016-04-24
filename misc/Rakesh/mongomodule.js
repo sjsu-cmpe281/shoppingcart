@@ -2,7 +2,8 @@
  var mongod = require('mongodb');
  var mongoc = mongod.MongoClient;
  var conn_string = 'mongodb://localhost:27017/cmpe281';
- var query  = ' ';
+ var query  = '';
+ var response = '';
 
  var findProd = function(db, callback) {
         var list = db.collection('catalog').find();
@@ -10,9 +11,9 @@
             if(err) throw err;
 
             if(results == null) {
-               callback();
+               callback(response);
             } else {
-               console.dir(results);
+               response+=JSON.stringify(results)+",";
             }
 
         });
@@ -43,7 +44,7 @@
 					           });		
  };
 
- module.exports.queryHandler = function (queryString, methodType) {
+ module.exports.queryHandler = function (queryString, methodType, callback) {
      mongoc.connect(conn_string, function(err, db) {
 	if (err) {
            console.log("[ERROR]: Could not connect to MongoDB server");
@@ -52,36 +53,41 @@
 
         console.log("[INFO] : Successfully connected to MongoDB server");
         query = queryString;
+        response = '';
         console.log("[INFO] : Query String = "+query);
 
         switch (methodType){
          case "GET" :     
-           	     findProd(db, function() {
+           	     findProd(db, function(r) {
+                     callback(r);   
                      db.close();
                      });
                      break;
     
          case "POST":
                      createProdList(db, function(){
+                     callback(r);   
                      db.close();
                      });
                      break;
                
          case "PUT":
                      updProdList(db, function(){
+                     callback(r);   
                      db.close();
                      });
                      break;
                
          case "DELETE":
                      delProd(db, function(){
+                     callback(r);   
                      db.close();
                      });
                      break;
          default   :
                      console.log("ERROR: method type unknown");       
                      db.close();
-        }             
+        }          
      }); 
  }
 
