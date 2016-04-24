@@ -3,7 +3,7 @@
 var http = require("http");
 var port = "8090";
 
-var mongo = require('./mongomodule');
+var mongomodule = require("./mongomodule.js");
 
 var server = http.createServer(function(request, response) {
       var err = '0';
@@ -20,20 +20,12 @@ var server = http.createServer(function(request, response) {
       if (request.url === "/catalog") {
           switch (request.method) {
             case "GET"    :
-                            console.log("[INFO] : received mongo GET request");
-                            mongo.queryHandler(msgbody);
-          		    break;
 	    case "POST"   :
-                            console.log("[INFO] : received mongo POST request");
-          		    break;
-
 	    case "PUT"    :
-                            console.log("[INFO] : received mongo PUT request");
-          		    break;
-
 	    case "DELETE" :
-                            console.log("[INFO] : received mongo DELETE request");
-          		    break;
+                            console.log("[INFO] : received mongo "+request.method+" request");
+          		    mongomodule.queryHandler(msgbody, request.method);
+			    break;
           
             default       :
                             console.log("[ERROR]: received unknown method type");
