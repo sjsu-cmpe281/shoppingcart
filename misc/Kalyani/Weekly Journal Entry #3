@@ -1,0 +1,16 @@
+GIT Repository: https://github.com/sjsu-cmpe281/shoppingcart 
+
+Waffle Link: https://waffle.io/sjsu-cmpe281/shoppingcart
+
+As a part of my team's Front End Part, I have started my Express Node Project in Eclipse. 
+I have uploaded the code and notes which I have made in Misc/Kalyani folder of our project’s GitHub repository. 
+This week I have developed sample web pages and wrote the code for retrieval and storing of data from backend. 
+In first step I retrieved data from mongo db from my local system and displayed it on the front end UI.
+We have created a sample db and collection in mongo db for product catalog that we can use for this purpose. 
+In the next step I tried to retrieve data from AWS through Node REST API calls which we will be using to retrieve data from product catalog db in the backend present in AWS. 
+For trial purpose I have retrieved data from GrailsVersion2 app that I deployed in my AWS EC2 instance.
+I have also written the code for storing data into local mongo db system.
+I have developed a sample signup/register page in my Node Js project and when entered the details I wrote the code where the entered data in stored in mongo db of my local system. 
+I am working on storing the data to RIAK Db which we are using for shopping cart.
+I am also working on how to store the data in backend db which is RIAK in our case for shopping cart db using Node REST API calls.
+Also I am trying to develop webpages using angular js for dynamic display of data on our front end.
