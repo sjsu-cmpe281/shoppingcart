@@ -1,0 +1,28 @@
+###################################################################
+# AUTHOR: Sarat Vemulapalli
+# DATE  : April 23, 2016
+###################################################################
+
+Github Team REPO: 
+https://github.com/sjsu-cmpe281/shoppingcart
+UserID: saratvemulapalli
+
+Waffle : 
+https://waffle.io/sjsu-cmpe281/shoppingcart
+
+
+1. Spent time deciding the shoppingcart Riak design on the backend.
+As discussed in the previous week's team meeting, we decided on the JSON object format. 
+Worked on designing the shoppingcart datastore schema for Riak. 
+
+My architecture design:
+
+Each shopping cart is identified by unique shopping cart identifier. This is choosen because a shoppingcart can be edited easily with the help of Unique cart ID.
+Each shopping cart is attached to userid. Because all orders of a user can be fetched directly.
+Each shopping cart has status. This indicates if cart is checked out/pending/shipping.
+Each shopping cart has items (ofcourse). These are item codes whose product data is stored in MongoDB
+
+2. Did a study on how riak replication occurs. It works as peer to peer hence mongoDB and Riak can be used in the same AWS instance running in different ports.
+Replication is taken care by itself. Hence all nodes are put behind Elastic Load Balencer.
+
+3. Worked on developing Riak Node js server to handle various shopping cart operations. 
