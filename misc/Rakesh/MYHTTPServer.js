@@ -3,13 +3,25 @@
 var http = require("http");
 var port = "8090";
 
+var mongo = require('./mongomodule');
+
 var server = http.createServer(function(request, response) {
       var err = '0';
+      var msgbody = [];
+
+      request.on('error', function(err) {
+         console.error(err);
+      }).on('data', function(chunk) {
+         msgbody.push(chunk);
+      }).on('end', function() {
+         msgbody = Buffer.concat(msgbody).toString();
+      });
 
       if (request.url === "/catalog") {
           switch (request.method) {
             case "GET"    :
                             console.log("[INFO] : received mongo GET request");
+                            mongo.queryHandler(msgbody);
           		    break;
 	    case "POST"   :
                             console.log("[INFO] : received mongo POST request");
@@ -24,7 +36,7 @@ var server = http.createServer(function(request, response) {
           		    break;
           
             default       :
-                            console.log("[ERROR] : received unknown method type");
+                            console.log("[ERROR]: received unknown method type");
                             err = '405';
           		    break;
 	  }
@@ -48,7 +60,7 @@ var server = http.createServer(function(request, response) {
           		    break;
 
             default       :
-                            console.log("[ERROR] : received unknown method type");
+                            console.log("[ERROR]: received unknown method type");
 			    err = '405';
           		    break;
 	  }
