@@ -8,7 +8,7 @@
 var Client = require('node-rest-client').Client;
 var http = require('http') ;
 var count = "";
-var endpoint = "http://ec2-52-38-120-224.us-west-2.compute.amazonaws.com:8080/GrailsGumballMachineVer2-2.2/gumball" ;
+var endpoint = "http://ec2-52-32-148-228.us-west-2.compute.amazonaws.com:8080/GrailsGumballMachineVer2-2.2/gumballs" ;
 
 
 exports.women = function(req, res){

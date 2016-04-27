@@ -1,13 +1,11 @@
 /**
  * http://usejsdoc.org/
-
- *
  */
 var ejs= require("ejs");
 var mongo = require("./mongoConnect");
 var mongoURL = "mongodb://localhost:27017/db_bag";
 var json_re={user:"kalyani"};
-exports.womendata = function(req, res){
+exports.cart = function(req, res){
 	
 	
 	mongo.connect(mongoURL, function(){
@@ -40,7 +38,7 @@ exports.womendata = function(req, res){
 						console.log(err);
 					}
 				}); */
-				res.render('womendata', {data1: json_re});
+				res.render('cart', {data1: json_re});
 			//	res.render('cart', {data1: json_re});
 				//res.send(json_responses);
 

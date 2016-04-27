@@ -31,9 +31,7 @@ exports.saveDetails = function(req, res){
 
 		coll.insert(details,(function(err, user){
 			if (user) {
-				
-				
-			
+							
 				console.log("Details saved successfully  ");
 				
 				res.redirect('/signup');
