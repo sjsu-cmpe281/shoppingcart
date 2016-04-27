@@ -1,6 +1,7 @@
 /* CMPE 281: Team Project */
 
 var http = require("http");
+var url  = require("url");
 var port = "8090";
 
 var mongomodule = require("./mongomodule.js");
@@ -12,23 +13,36 @@ var server = http.createServer(function(request, response) {
       request.on('error', function(err) {
          console.error(err);
       }).on('data', function(chunk) {
+         console.log("chunk="+chunk);
          msgbody.push(chunk);
       }).on('end', function() {
          msgbody = Buffer.concat(msgbody).toString();
       });
 
-      if (request.url === "/catalog") {
+      var urlMembers    = url.parse(request.url, true);
+      var query_params = urlMembers.query.gender;
+      var pathname     = urlMembers.pathname;
+      console.log("query_params: "+query_params);
+      console.log("pathname: "+pathname);
+
+      if (pathname === "/catalog") {
           switch (request.method) {
             case "GET"    :
 	    case "POST"   :
 	    case "PUT"    :
 	    case "DELETE" :
                             console.log("[INFO] : received mongo "+request.method+" request");
-          		    mongomodule.queryHandler(msgbody, 
+                            console.log("[INFO] : received body"+msgbody);
+          		    mongomodule.queryHandler(query_params, 
 					             request.method,
-						     function(respStr){
-                                                        console.log("[INFO] : "+respStr);
-                                                        sendHttpResp(response, respStr, err);
+						     function(error, respStr){
+                                                        if (error == "0") {
+                                                            console.log("[INFO] : "+respStr);
+                                                            sendHttpResp(response, respStr, null);
+                                                        } else {
+                                                            console.log("[ERROR]: err msg= "+respStr+", err code= "+error);
+                                                            sendHttpResp(response, respStr, error);
+							};
 						     });
 			    break;
           
@@ -77,19 +91,19 @@ function sendHttpResp(response, respStr, err){
                 break;
 
    case "400" : response.writeHead(400, {"Content-Type": "application/json"});
-                var resp = "{'error' : 'url is incorrect'}";
-                response.write(respStr);
+                //var resp = "{'error' : 'url is incorrect'}";
+                response.write("'error':'"+respStr+"'");
                 response.end();
                 break;
 
    case "405" : response.writeHead(405, {"Content-Type": "application/json"});
-                var resp = "{'error' : 'REST method type not allowed'}";
+                //var resp = "{'error' : 'REST method type not allowed'}";
                 response.write(respStr);
                 response.end();
                 break;
 
    default    : response.writeHead(503, {"Content-Type": "application/json"});
-                var resp = "{'error' : 'Server is unavailable'}";
+                //var resp = "{'error' : 'Server is unavailable'}";
                 response.write(respStr);
                 response.end();
                 break;

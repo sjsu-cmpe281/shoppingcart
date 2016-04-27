@@ -1,21 +1,31 @@
+//Author: Rakesh Datta
 
  var mongod = require('mongodb');
  var mongoc = mongod.MongoClient;
  var conn_string = 'mongodb://localhost:27017/cmpe281';
- var query  = '';
+ var query_param  = '';
  var response = '';
 
  var findProd = function(db, callback) {
-        var list = db.collection('catalog').find();
+        if (query_param == "men") {   
+           console.log("[INFO] : query param = gender:"+query_param);
+           var list = db.collection('catalog').find({"gender":"men"});
+        } else if (query_param == "women") {
+           console.log("[INFO] : query param = gender:"+query_param);
+           var list = db.collection('catalog').find({"gender":"women"});
+        } else {
+           response = "Invalid query param: "+query_param;
+           callback("400",response);
+	}
+ 
         list.each(function(err, results) {
-            if(err) throw err;
+                 if(err) throw err;
 
-            if(results == null) {
-               callback(response);
-            } else {
-               response+=JSON.stringify(results)+",";
-            }
-
+                 if(results == null) {
+                    callback("0",response);
+                 } else {
+                    response+=JSON.stringify(results)+",";
+                 }
         });
  };
 
@@ -44,7 +54,7 @@
 					           });		
  };
 
- module.exports.queryHandler = function (queryString, methodType, callback) {
+ module.exports.queryHandler = function (queryParam, methodType, callback) {
      mongoc.connect(conn_string, function(err, db) {
 	if (err) {
            console.log("[ERROR]: Could not connect to MongoDB server");
@@ -52,14 +62,15 @@
         }				
 
         console.log("[INFO] : Successfully connected to MongoDB server");
-        query = queryString;
+        query_param = queryParam;
         response = '';
-        console.log("[INFO] : Query String = "+query);
+        console.log("[INFO] : query received");
 
         switch (methodType){
          case "GET" :     
-           	     findProd(db, function(r) {
-                     callback(r);   
+           	     findProd(db, function(e, r) {
+        		console.log("[INFO] : e ="+e);
+                     callback(e, r);   
                      db.close();
                      });
                      break;
