@@ -1,4 +1,6 @@
-/* CMPE 281: Team Project */
+/* AUTHOR : RAKESH DATTA     */
+/* APRIL 2016                */
+/* SAN JOSE STATE UNIVERSITY */
 
 var http = require("http");
 var url  = require("url");
@@ -20,10 +22,13 @@ var server = http.createServer(function(request, response) {
       });
 
       var urlMembers    = url.parse(request.url, true);
-      var query_params = urlMembers.query.gender;
+      var query_params = urlMembers.query;
+      //var query_params = urlMembers.query.gender;
       var pathname     = urlMembers.pathname;
-      console.log("query_params: "+query_params);
+      //console.log("gender: "+query_params.gender);
       console.log("pathname: "+pathname);
+      //console.log("item_code: "+query_params.id);
+      //console.log("available_count: "+query_params.count);
 
       if (pathname === "/catalog") {
           switch (request.method) {
@@ -82,7 +87,6 @@ var server = http.createServer(function(request, response) {
 });
 
 function sendHttpResp(response, respStr, err){
-  //console.log("RAKESH:"+respStr+" END");
   switch (err) {
    case "0"   : response.writeHead(200, {"Content-Type": "application/json"});
                 //var resp = "{'key' : 'value'}";

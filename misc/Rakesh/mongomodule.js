@@ -1,4 +1,7 @@
-//Author: Rakesh Datta
+/* AUTHOR : RAKESH DATTA     */
+/* APRIL 2016                */
+/* SAN JOSE STATE UNIVERSITY */
+
 
  var mongod = require('mongodb');
  var mongoc = mongod.MongoClient;
@@ -7,10 +10,10 @@
  var response = '';
 
  var findProd = function(db, callback) {
-        if (query_param == "men") {   
+        if (query_param.gender == "men") {   
            console.log("[INFO] : query param = gender:"+query_param);
            var list = db.collection('catalog').find({"gender":"men"});
-        } else if (query_param == "women") {
+        } else if (query_param.gender == "women") {
            console.log("[INFO] : query param = gender:"+query_param);
            var list = db.collection('catalog').find({"gender":"women"});
         } else {
@@ -39,11 +42,18 @@
  };
 
  var updProdList = function(db, callback) {
-        var list = db.collection('catalog').updateOne(query,
-                                                      function(err, result) {
-   							console.log("[INFO] : Updated a record in Product Catalog");
-							callback();
-					              });		
+        console.log("[INFO] : item_code to update = "+query_param.id);
+        console.log("[INFO] : available count     = "+query_param.count);
+       
+        try {
+            db.collection('catalog').updateOne({"item_code":query_param.id},
+					       {$set: {"avail_count":query_param.count}}
+					      );
+      	    console.log("[INFO] : Updated a record in Product Catalog");
+            callback("0","Record Updated Successfully");
+        } catch (e) {
+            callback("500","Mongo Server Error");
+        }			
  };
 
  var delProd = function(db, callback) {
@@ -69,29 +79,28 @@
         switch (methodType){
          case "GET" :     
            	     findProd(db, function(e, r) {
-        		console.log("[INFO] : e ="+e);
                      callback(e, r);   
                      db.close();
                      });
                      break;
     
          case "POST":
-                     createProdList(db, function(){
-                     callback(r);   
+                     createProdList(db, function(e, r){
+                     callback(e, r);   
                      db.close();
                      });
                      break;
                
          case "PUT":
-                     updProdList(db, function(){
-                     callback(r);   
+                     updProdList(db, function(e, r){
+                     callback(e, r);   
                      db.close();
                      });
                      break;
                
          case "DELETE":
-                     delProd(db, function(){
-                     callback(r);   
+                     delProd(db, function(e, r){
+                     callback(e, r);   
                      db.close();
                      });
                      break;
