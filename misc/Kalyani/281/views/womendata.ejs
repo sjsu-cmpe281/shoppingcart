@@ -46,17 +46,21 @@
   <div class="container-full">
   <div class="jumbotron">
 This all is from database.
+<form method="get" action="/addToCart">
+
 <% for(var i in data1.r) { %>
 <div class="panel panel-default">
+<!-- <input type="hidden" name="item_code" value=<%= data1.r[i].item_code %> /> -->
 <p>item_code : <%= data1.r[i].item_code %><p>
 <p>type : <%= data1.r[i].type %><p>
 <p>gender : <%= data1.r[i].gender %><p>
 <p>color : <%= data1.r[i].color %><p>
 <p>style : <%= data1.r[i].style %><p>
 <p>price : <%= data1.r[i].price %><p>
-<p>avail_count : <%= data1.r[i].avail_count %><p><a href="https://www.google.com/"><button>Add to cart</button> </a>
+<button name="choice" id="choice" value='<%= data1.r[i].item_code %>' type="submit" >Add to cart</button> </a>
 </div>
 <% }%>
+</form>
 </div>
 </div>
 </div>

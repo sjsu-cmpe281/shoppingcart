@@ -11,7 +11,11 @@ var express = require('express')
   , women = require('./routes/women')
   , womendata = require('./routes/womendata')
   , logindata = require('./routes/logindata')
-  , signup = require('./routes/signup');
+  , signup = require('./routes/signup')
+  , post1 = require('./routes/post1')
+  , cart = require('./routes/cart')
+  , register = require('./routes/register')
+  , checkout = require('./routes/checkout');
 
 var app = express();
 
@@ -37,7 +41,12 @@ app.get('/women',women.women);
 app.get('/womendata',womendata.womendata);
 app.get('/logindata',logindata.logindata);
 app.get('/signup',signup.signup);
+app.get('/post1',post1.post1);
+app.get('/cart',cart.cart);
+app.get('/register',register.register);
+app.get('/checkout',checkout.checkout);
 app.post('/saveDetails',signup.saveDetails);
+app.post('/saveDetail',post1.saveDetail);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
