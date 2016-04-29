@@ -60,19 +60,11 @@ var server = http.createServer(function(request, response) {
       } else if (request.url === "/shopcart") {
           switch (request.method) {
             case "GET"    :
-                            console.log("[INFO] : received riak GET request");
-          		    break;
-          
 	    case "POST"   :
-                            console.log("[INFO] : received riak POST request");
-          		    break;
-
 	    case "PUT"    :
-                            console.log("[INFO] : received riak PUT request");
-          		    break;
-
 	    case "DELETE" :
-                            console.log("[INFO] : received riak DELETE request");
+                            console.log("[INFO] : received riak "+request.method+" request");
+                            console.log("[INFO] : received body"+msgbody);
           		    break;
 
             default       :
