@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+ <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel='stylesheet' href='/stylesheets/style.css' />
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+</head>
+<body>
+<div class="form">
+
+
+<div class="tab-content">
+        <div id="signup">   
+          <h1>Sign Up for Free</h1>
+          
+          <form action="/saveDetail" method="post">
+          
+          <div class="top-row">
+            <div class="field-wrap">
+              <label>
+                ID<span class="req">*</span>
+              </label>
+              <input type="text" name="id" required autocomplete="off" />
+            </div>
+            
+            <div class="field-wrap">
+              <label>
+                version<span class="req">*</span>
+              </label>
+              <input type="text" name="version" required autocomplete="off"/>
+            </div>
+          </div>
+        
+            <div class="field-wrap">
+              <label>
+                countGumballs<span class="req">*</span>
+              </label>
+              <input type="text" name="countGumballs" required autocomplete="off"/>
+            </div>
+          </div>
+
+          <div class="field-wrap">
+            <label>
+              modelNumber<span class="req">*</span>
+            </label>
+            <input type="text" name="modelNumber" required autocomplete="off"/>
+          </div>
+          
+          <div class="field-wrap">
+            <label>
+              serialNumber<span class="req">*</span>
+            </label>
+            <input type="text" name="serialNumber" required autocomplete="off"/>
+          </div>
+          
+          <button type="submit" class="button button-block"/>Get Started</button>
+          
+          </form>
+
+        </div>
+     </div><!-- tab-content -->
+
+</body>
+
+</html>

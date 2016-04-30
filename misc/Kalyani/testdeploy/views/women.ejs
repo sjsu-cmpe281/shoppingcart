@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+  <title>Guess Bags</title>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+	
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+  <div class="container-full">
+  <div class="jumbotron">
+  <h2 class="margin-based-vertical">
+  Women
+    </h2>
+    </div>
+  </div>
+  
+  <div >
+This all is from database.
+
+
+<div class="panel panel-default">
+
+<% for(var i in data) { %>
+<div class="panel panel-default">
+<p><%= data[i].id %><p>
+<p><%= data[i].countGumballs %><p>
+<p><%= data[i].modelNumber %><p>
+<p><%= data[i].serialNumber %><p>
+<% }%>
+
+</div>
+</div>
+
+  <div class="container">
+  <div class="row">
+    <div class="col-sm-6" style="background-color:yellow;">
+      <p>..</p>
+    </div>
+    <div class="col-sm-6" style="background-color:yellow;">
+      <p>...</p>
+    </div>
+  </div>
+</div>
+
+ <div class="container">
+<div class="row">
+    <div class="col-sm-4" >
+      <p>First</p>
+    </div>
+    <div class="col-sm-4">
+      <p>Second</p>
+    </div>
+      <div class="col-sm-4">
+      <p>Third</p>
+    </div>
+     </div>
+  </div>
+
+  </body>
+</html>
