@@ -11,13 +11,13 @@
 
  var findProd = function(db, callback) {
         if (query_param.gender == "men") {   
-           console.log("[INFO] : query param = gender:"+query_param);
+           console.log("[INFO] : query param = gender:"+query_param.gender);
            var list = db.collection('catalog').find({"gender":"men"});
         } else if (query_param.gender == "women") {
-           console.log("[INFO] : query param = gender:"+query_param);
+           console.log("[INFO] : query param = gender:"+query_param.gender);
            var list = db.collection('catalog').find({"gender":"women"});
         } else {
-           response = "Invalid query param: "+query_param;
+           response = "Invalid query param: "+query_param.gender;
            callback("400",response);
 	}
  
