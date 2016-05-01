@@ -7,6 +7,7 @@ var url  = require("url");
 var port = "8090";
 
 var mongomodule = require("./mongomodule.js");
+var riakmodule = require("./riakmodule.js")
 
 var server = http.createServer(function(request, response) {
       var err = '0';
@@ -65,6 +66,7 @@ var server = http.createServer(function(request, response) {
 	    case "DELETE" :
                             console.log("[INFO] : received riak "+request.method+" request");
                             console.log("[INFO] : received body"+msgbody);
+                            riakmodule.queryHandler(msgbody,request.method)
           		    break;
 
             default       :
