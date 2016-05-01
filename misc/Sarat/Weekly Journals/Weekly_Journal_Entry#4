@@ -1,0 +1,25 @@
+###################################################################
+# AUTHOR: Sarat Vemulapalli
+# DATE  : April 30, 2016
+###################################################################
+
+Github Team REPO: 
+https://github.com/sjsu-cmpe281/shoppingcart
+UserID: saratvemulapalli
+
+Waffle : 
+https://waffle.io/sjsu-cmpe281/shoppingcart
+
+1. Added Riak CRUD operations for nodejs. Riak is being used for shopping cart.
+We are using Riak POST rest API for Proceed to checkout and PUT rest API for confirming order.
+
+2. While confirming the order, Riak communicates with MongoDB Rest API and sends a HTTP GET request to check if required
+quantity of an item is available or not. 
+If it is available , the quantity is updated using MongoDB PUT and order is confirmed.
+After the order is confirmed order is pushed to Orders bucket and removed in shopping cart bucket.
+
+3. Integrated NodeJS rest client with Riak REST API's inorder to complete the module in HTTP node backend server.
+This server will be running on AWS and will redirect the request to Riak and MongoDB respectively. 
+Developed MongoDB integration in Riak nodejs module.Also updated common server code for exposing backend REST API's for heroku app to interact.
+
+5. Continued study on Riak replication. It is an AP system and peer-to-peer replication system. Hence any node under Elastic Load Balancer can be used to service the request. 
