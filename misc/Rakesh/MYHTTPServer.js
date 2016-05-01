@@ -43,7 +43,7 @@ var server = http.createServer(function(request, response) {
 						     function(error, respStr){
                                                         if (error == "0") {
                                                             console.log("[INFO] : "+respStr);
-                                                            sendHttpResp(response, respStr, null);
+                                                            sendHttpResp(response, respStr, error);
                                                         } else {
                                                             console.log("[ERROR]: err msg= "+respStr+", err code= "+error);
                                                             sendHttpResp(response, respStr, error);
