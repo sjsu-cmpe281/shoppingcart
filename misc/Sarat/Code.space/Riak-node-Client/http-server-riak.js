@@ -35,24 +35,24 @@ var server = http.createServer(function(request, response) {
           switch (request.method) {
             case "GET"    :
                             console.log("[INFO] : received riak GET request");
-                  break;
-          
-      case "POST"   :
+                            riakmodule.queryHandler(msgbody,request.method)
+                            break;
+            case "POST"   :
                             console.log("[INFO] : received riak POST request");
-                  break;
-
-      case "PUT"    :
+                            riakmodule.queryHandler(msgbody,request.method)
+                            break;
+            case "PUT"    :
                             console.log("[INFO] : received riak PUT request");
-                  break;
-
-      case "DELETE" :
+                            riakmodule.queryHandler(msgbody,request.method)
+                            break;
+            case "DELETE" :
                             console.log("[INFO] : received riak DELETE request");
-                  break;
-
+                            riakmodule.queryHandler(msgbody,request.method)
+                            break;
             default       :
                             console.log("[ERROR]: received unknown method type");
-          err = '405';
-                  break;
+                            err = '405';
+                            break;
     }
       } else {
          console.log("[ERROR]: Unknown Url");
