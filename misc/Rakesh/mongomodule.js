@@ -5,7 +5,7 @@
 
  var mongod = require('mongodb');
  var mongoc = mongod.MongoClient;
- var conn_string = 'mongodb://localhost:27017/cmpe281';
+ var conn_string = 'mongodb://localhost:27017/cmpe281?replicaSet=cmpe281&readPreference=nearest';
  var query_param  = '';
  var response = '';
 
@@ -75,6 +75,8 @@
         query_param = queryParam;
         response = '';
         console.log("[INFO] : query received");
+
+
 
         switch (methodType){
          case "GET" :     
