@@ -1,0 +1,16 @@
+GIT Repository: https://github.com/sjsu-cmpe281/shoppingcart
+
+Waffle Link: https://waffle.io/sjsu-cmpe281/shoppingcart
+
+As a part of my team's Front End Part, I have started my Express Node Project in Eclipse. 
+I have uploaded the code and notes which I have made in Misc/Kalyani folder of our project’s GitHub repository. 
+This week I have developed code for all necessary REST API calls for various modules needed to perform GET, PUT, POST and DELETE 
+functions to backend databases mongo db and Riak database. I implemented those modules first on mongo db to retrieve data from backend 
+and to display it on our frontend web page product catalog. Then I have implemented the REST calls on RIAK database present in backend 
+to fetch and store and update values in shopping cart. I have developed checkout and login and other web pages of our team project.
+I have integrated my modules with my teammate working on frontend. I and her have developed various functions required to be present in
+shopping cart page like filters, checking items availability count before adding to cart, updating quantity of items in cart etc. 
+I have also deployed my project code on heroku. I need to deploy the whole project code on heroku which I will be doing in the coming week. 
+I have understood the Heroku functionalities and now I am comfortable with deploying code on Heroku.
+
+ 
