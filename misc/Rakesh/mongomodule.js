@@ -10,6 +10,7 @@
  var response = '';
 
  var findProd = function(db, callback) {
+        response = '';
         if (query_param.gender == "men") {   
            console.log("[INFO] : query param = gender:"+query_param.gender);
            var list = db.collection('catalog').find({"gender":"men"});
@@ -25,20 +26,25 @@
                  if(err) throw err;
 
                  if(results == null) {
+                    response="["+response+"]";
                     callback("0",response);
                  } else {
-                    response+=JSON.stringify(results)+",";
+ 			if (response === ''){
+                          response=JSON.stringify(results);
+                    	} else {
+                          response+=","+JSON.stringify(results);
+                        }
                  }
         });
  };
 
 
  var createProdList = function(db, callback) {
-        var list = db.collection('catalog').insertOne(query,
-                                                      function(err, result) {
-   							console.log("[INFO] : Inserted a record into Product Catalog");
-							callback();
-					              });		
+        //var list = db.collection('catalog').insertOne(query,
+        //                                              function(err, result) {
+        //							console.log("[INFO] : Inserted a record into Product Catalog");
+        //							callback();
+        //					              });		
  };
 
  var updProdList = function(db, callback) {
@@ -57,11 +63,11 @@
  };
 
  var delProd = function(db, callback) {
-        var list = db.collection('catalog').remove(query,
-                                                   function(err, result) {
-   							console.log("[INFO] : Deleted a record from Product Catalog");
-							callback();
-					           });		
+        //var list = db.collection('catalog').remove(query,
+        //                                           function(err, result) {
+   	 //						console.log("[INFO] : Deleted a record from Product Catalog");
+//							callback();
+//					           });		
  };
 
  module.exports.queryHandler = function (queryParam, methodType, callback) {
