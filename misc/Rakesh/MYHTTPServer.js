@@ -7,19 +7,20 @@ var url  = require("url");
 var port = "8090";
 
 var mongomodule = require("./mongomodule.js");
+var mongoshp = require("./mongoshp.js");
 
 var server = http.createServer(function(request, response) {
       var err = '0';
       var msgbody = [];
 
-      request.on('error', function(err) {
+      /*request.on('error', function(err) {
          console.error(err);
       }).on('data', function(chunk) {
          console.log("chunk="+chunk);
          msgbody.push(chunk);
       }).on('end', function() {
          msgbody = Buffer.concat(msgbody).toString();
-      });
+      });*/
 
       var urlMembers    = url.parse(request.url, true);
       var query_params = urlMembers.query;
@@ -33,12 +34,12 @@ var server = http.createServer(function(request, response) {
       if (pathname === "/catalog") {
           switch (request.method) {
             case "GET"    :
-	    case "POST"   :
-	    case "PUT"    :
-	    case "DELETE" :
+	          case "POST"   :
+	          case "PUT"    :
+	          case "DELETE" :
                             console.log("[INFO] : received mongo "+request.method+" request");
                             console.log("[INFO] : received body"+msgbody);
-          		    mongomodule.queryHandler(query_params, 
+          		    		mongomodule.queryHandler(query_params, 
 					             request.method,
 						     function(error, respStr){
                                                         if (error == "0") {
@@ -49,29 +50,85 @@ var server = http.createServer(function(request, response) {
                                                             sendHttpResp(response, respStr, error);
 							};
 						     });
-			    break;
+			     break;
           
             default       :
                             console.log("[ERROR]: received unknown method type");
                             err = '405';
           		    break;
-	  }
+	       }
 
-      } else if (request.url === "/shopcart") {
+      } else if (pathname === "/shopcart") {
           switch (request.method) {
-            case "GET"    :
-	    case "POST"   :
-	    case "PUT"    :
-	    case "DELETE" :
-                            console.log("[INFO] : received riak "+request.method+" request");
-                            console.log("[INFO] : received body"+msgbody);
-          		    break;
+          case "GET"    :   console.log("[INFO] : received mongoshp GET "+request.method+" request");
+                            console.log("[INFO] : received mongoshp body GET "+msgbody);
+                            mongoshp.queryHandler(query_params,request.method,function(error, respStr){
+                                                        if (error == "0") {
+                                                            console.log("[INFO] : "+respStr);
+                                                            sendHttpResp(response, respStr, error);
+                                                        } else {
+                                                            console.log("[ERROR]: err msg= "+respStr+", err code= "+error);
+                                                            sendHttpResp(response, respStr, error);
+                                                        };
+                            });
+                            break;
+	    	  case "POST"   :  request.on('error', function(err) {
+                           console.error(err);
+                           }).on('data', function(chunk) {
+                           console.log("chunk="+chunk);
+                           msgbody.push(chunk);
+                           
+                           
+                           }).on('end', function() {
+                           msgbody = Buffer.concat(msgbody).toString();
+                           //var jsonpar = JSON.parse(msgbody)
+                           var sarat = JSON.parse(msgbody);
+                           console.log("[INFO] : received mongoshp POST "+request.method+" request");
+                           console.log("[INFO] : received mongoshp body POST "+msgbody);
+                           mongoshp.queryHandler(sarat,request.method,function(error, respStr){
+                                                        if (error == "0") {
+                                                            console.log("[INFO] : "+respStr);
+                                                            sendHttpResp(response, respStr, error);
+                                                        } else {
+                                                            console.log("[ERROR]: err msg= "+respStr+", err code= "+error);
+                                                            sendHttpResp(response, respStr, error);
+                           };
+                           });
+                           
+                           }); 
+                           break;
+                          
+	    	  case "PUT"    :  request.on('error', function(err) {
+                           console.error(err);
+                           }).on('data', function(chunk) {
+                           console.log("chunk="+chunk);
+                           msgbody.push(chunk);
+                           
+                           
+                           }).on('end', function() {
+                           msgbody = Buffer.concat(msgbody).toString();
 
-            default       :
+                           console.log("[INFO] : received mongoshp PUT "+request.method+" request");
+                           console.log("[INFO] : received mongoshp body PUT "+msgbody);
+                           mongoshp.queryHandler(msgbody,request.method,function(error, respStr){
+                                                        if (error == "0") {
+                                                            console.log("[INFO] : "+respStr);
+                                                            sendHttpResp(response, respStr, error);
+                                                        } else {
+                                                            console.log("[ERROR]: err msg= "+respStr+", err code= "+error);
+                                                            sendHttpResp(response, respStr, error);
+                           };
+                           });
+                           
+                           });
+                           break;
+	    	  case "DELETE" :  break;
+
+          default       :
                             console.log("[ERROR]: received unknown method type");
-			    err = '405';
-          		    break;
-	  }
+			                      err = '405';
+          		              break;
+	        }
       } else {
          console.log("[ERROR]: Unknown Url");
          err = '400';
@@ -79,6 +136,9 @@ var server = http.createServer(function(request, response) {
 });
 
 function sendHttpResp(response, respStr, err){
+  console.log("[INFO] response" +response)
+  console.log("[INFO] respStr" +respStr)
+  console.log("[INFO] err " +err)
   switch (err) {
    case "0"   : response.writeHead(200, {"Content-Type": "application/json"});
                 //var resp = "{'key' : 'value'}";
