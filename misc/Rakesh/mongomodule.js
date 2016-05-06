@@ -17,6 +17,9 @@
         } else if (query_param.gender == "women") {
            console.log("[INFO] : query param = gender:"+query_param.gender);
            var list = db.collection('catalog').find({"gender":"women"});
+        } else if (query_param.gender == "all") {
+           console.log("[INFO] : query param = gender:"+query_param.gender);
+           var list = db.collection('catalog').find();
         } else {
            response = "Invalid query param: "+query_param.gender;
            callback("400",response);
