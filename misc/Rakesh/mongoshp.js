@@ -13,12 +13,11 @@
         response = '';
         if (query_param.user == "admin") {   
            console.log("[INFO] : query param = user:"+query_param.user);
-           var list = db.collection('catalog').find({"user":"admin"});
+           var list = db.collection('orders').find({"user":"admin"});
         } else {
-           response = "Invalid query param: "+query_param.gender;
+           response = "Invalid query param: "+query_param.user;
            callback("400",response);
 	}
- 
         list.each(function(err, results) {
                  if(err) throw err;
 
@@ -34,6 +33,31 @@
                  }
         });
  };
+
+ var fetchCart = function(db, callback) {
+    response = '';
+        if (query_param.user == "admin") {   
+           console.log("[INFO] : query param = user:"+query_param.user);
+           var list = db.collection('shoppingcart').find({"user":"admin"});
+        } else {
+           response = "Invalid query param: "+query_param.user;
+           callback("400",response);
+    }
+        list.each(function(err, results) {
+                 if(err) throw err;
+
+                 if(results == null) {
+                    response="["+response+"]";
+                    callback("0",response);
+                 } else {
+            if (response === ''){
+                          response=JSON.stringify(results);
+                        } else {
+                          response+=","+JSON.stringify(results);
+                        }
+                 }
+        });
+ }
 
 
  var updateCart = function(db, callback) {
@@ -183,6 +207,12 @@
                      callback(e, r);   
                      db.close();
                      });
+                     break;
+         case "GETS":
+                     fetchCart(db,function(e,r) {
+                        callback(e,r);
+                        db.close();
+                     })
                      break;
          default   :
                      console.log("ERROR: method type unknown");       

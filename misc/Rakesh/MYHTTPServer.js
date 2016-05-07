@@ -85,8 +85,6 @@ var server = http.createServer(function(request, response) {
                            var sarat = JSON.parse(msgbody);
                            console.log("[INFO] : received mongoshp POST "+request.method+" request");
                            console.log("[INFO] : received mongoshp body POST "+msgbody);
-                           var testconsole = console.log(sarat)
-                           console.log(testconsole)
                            mongoshp.queryHandler(sarat,request.method,function(error, respStr){
                                                         if (error == "0") {
                                                             console.log("[INFO] : "+respStr);
@@ -131,7 +129,23 @@ var server = http.createServer(function(request, response) {
 			                      err = '405';
           		              break;
 	        }
-      } else {
+      } 
+      else if(pathname === "/shopcartget")
+      {
+        console.log("[INFO] : received mongoshp GET "+request.method+" request");
+        console.log("[INFO] : received mongoshp body GET shopcartget "+msgbody);
+        mongoshp.queryHandler(query_params,"GETS",function(error, respStr){
+        if (error == "0") {
+          console.log("[INFO] : "+respStr);
+          sendHttpResp(response, respStr, error);
+        } else {
+          console.log("[ERROR]: err msg= "+respStr+", err code= "+error);
+          sendHttpResp(response, respStr, error);
+        };
+        });
+      }
+
+      else {
          console.log("[ERROR]: Unknown Url");
          err = '400';
       }
