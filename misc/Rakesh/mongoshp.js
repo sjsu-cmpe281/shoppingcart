@@ -45,7 +45,7 @@
         console.log("[INFO] : New Cart = "+queryParam["user"]);
         console.log("[INFO] : Requested count     = "+queryParam["items"]);
         console.log("[INFO] : State = "+queryParam["state"]);
-        
+        response = ''
         
         if(query_param.user=="admin")
             try{
@@ -59,33 +59,64 @@
         {
             try{
                 //var list = db.collection('catalog').find({"items":query_param.});
-                for(var i in query_param.items) {
-                    var val = query_param.items[i];
-                    console.log(val.id)
-                    var name = "item_code"
-                    var query = {};
-                    query[name] = val.id;
-                    var list = db.catalog.find(query)
-                    if(list.avail_count<val.quantity)
-                        throw new Error("Requested quantity for " + val.id + "is not available");
-                }
-                for(var i in query_param.items) {
-                var val = query_param.items[i];
-                var list = db.collection('catalog').find({"items":val.id})    
-                db.collection('catalog').updateOne({"item_code":val.id},
-                           {$set: {"avail_count":list.avail_count-val.quantity}}
-                          );
-                }
-                db.collection('shoppingcart').remove({ user : query_param.user })
-                db.collection('orders').insertOne({
-                user:query_param.user,
-                items:query_param.items,
-                state:query_param.state
-            })
-        } catch (e) {
+                var list = db.collection('catalog').find()
+                    list.each(function(err, results) {
+                    if(err) throw err;
+                    if(results == null) {
+                        response="["+response+"]";
+                        console.log(response)
+
+                        for(var i in query_param.items) {
+                            var val = query_param.items[i];
+                            console.log(val.id)
+                            var sarat = JSON.parse(response);
+                            for(var j in sarat)
+                            {
+                                //console.log("[INFO] .itemcode"+sarat[j])
+                                console.log("[INFO] [item_code]"+sarat[j]["item_code"])
+                                if(sarat[j]["item_code"]==val.id)
+                                {
+                                    var updatedQuantity = sarat[j]["avail_count"] - val.quantity;
+                                    db.collection('catalog').updateOne({"item_code":val.id},
+                                    {$set: {"avail_count":updatedQuantity}}
+                                    );
+
+                                }
+
+                            }
+                            //if(list.avail_count<val.quantity)
+                         //throw new Error("Requested quantity for " + val.id + "is not available");
+                        }
+                        db.collection('shoppingcart').remove({ user : query_param.user })
+                        db.collection('orders').insertOne({
+                        user:query_param.user,
+                        items:query_param.items,
+                        state:query_param.state
+                        }, function(err, results) {
+                        console.log(results);
+                        console.log("[INFO] : Order confimred record in Orders");
+                        callback("0","Order Confirmed Successfully");
+                        //callback();
+                        })
+                        
+
+
+
+                    //callback("0",response);
+                    } else {
+                        if (response === ''){
+                          response=JSON.stringify(results);
+                        } else {
+                          response+=","+JSON.stringify(results);
+                        }
+                    }
+
+                    });
+                
+                } catch (e) {
                 console.log(e)
                 callback("500","Mongo Server Error");
-            }
+                }
         }    
         else
         {

@@ -85,6 +85,8 @@ var server = http.createServer(function(request, response) {
                            var sarat = JSON.parse(msgbody);
                            console.log("[INFO] : received mongoshp POST "+request.method+" request");
                            console.log("[INFO] : received mongoshp body POST "+msgbody);
+                           var testconsole = console.log(sarat)
+                           console.log(testconsole)
                            mongoshp.queryHandler(sarat,request.method,function(error, respStr){
                                                         if (error == "0") {
                                                             console.log("[INFO] : "+respStr);
